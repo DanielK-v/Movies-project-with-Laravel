@@ -1,0 +1,155 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Movie as Movie;
+use App\Genre as Genre;
+use App\Comment as Comment;
+use Illuminate\Http\Request;
+
+class MoviesController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $movies = Movie::all();
+
+        return view('/movies.index')->with('movies',$movies);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $genres = Genre::All()->toArray();
+
+        return view('/movies.create')->with('genres', $genres);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+
+        $this->authorize('create', Movie::class);
+        
+        $this->validateRequest($request);
+        // dd($request);
+        $movie = new Movie();
+
+        $movie->title = $request->title;
+        $movie->year = $request->year;
+        $movie->genre_id = (int)$request->genre;
+        $movie->description = $request->description;
+        $this->storeImage($movie);
+
+        $movie->save();
+        return  redirect('/movie',201);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Movie  $movie
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Movie $movie)
+    {
+        $comments = Comment::where('movie_id', $movie->id)->orderBy('created_at', 'desc')->get();
+    
+        $number_of_comments = count($comments);
+        
+        return view('/movies.show',[
+         'movie' =>$movie,
+         'comments' =>$comments, 
+         'number_of_comments' => $number_of_comments
+         ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Movie  $movies
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Movie $movie)
+    {
+        // $this->authorize('edit', $movie);
+        $genres = Genre::All()->toArray();
+    
+        return view('/movies.edit')->with(['genres' => $genres, 'movie'=>$movie]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Movies  $movies
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Movie $movie)
+    {
+
+        $this->validateRequest($request);
+
+        $movie->title = $request->title;
+        $movie->year = $request->year;
+        $movie->genre_id = (int)$request->genre;
+
+        $movie->update();
+        return  redirect('/movie');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Movies  $movies
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Movie $movie)
+    {
+        $this->authorize('delete', $movie);
+        $movie->delete();
+        return redirect('/movie');
+    }
+
+    public function validateRequest($request)
+    {
+
+        $request = request()->validate([
+            'title' => 'required|min:3',
+            'year' => 'required|int',
+            'description' =>'required|min:3|max:2000'
+        ]);
+
+        if(request()->hasfile('cover_img'){
+            request()->validate([
+                'cover_img' => 'file|image|max:5000'
+            ])
+        });
+
+        return $request;
+    }
+
+    public function storeImage($movie)
+    {
+      if(request()->has('cover_img')){
+        dd(request()->cover_img);  
+        $movie->update([
+            'cover_img' => request()->cover_img->store('uploads', 'public')
+        ]);
+      }
+    }
+    
+}
