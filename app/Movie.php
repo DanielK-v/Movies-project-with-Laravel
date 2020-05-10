@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Movie extends Model
 {
 
+
    protected $fillabe = ['title', 'genre', 'year', 'cover_img', 'description'];
 
     public function genre()

@@ -62,6 +62,11 @@
                               </div>
                         </div>
 
+                        <div class="form-group">
+                            <label for="description">Movie description</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" cols="20"></textarea>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

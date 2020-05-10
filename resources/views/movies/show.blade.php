@@ -7,7 +7,7 @@
       <h1 class="card-title">{{$movie->title}}</h1>
       <div class="row">
         
-        <img class="col-3" src="{{ URL::asset('storage/uploads/' . $movie->cover_img) }}" alt="cover Pic" height="300" width="200">
+        <img class="col-3" src="{{ URL::asset('storage/' . $movie->cover_img) }}" alt="cover Pic" height="300" width="200">
         <iframe class="col-9" width="420" height="280" src="https://www.youtube.com/embed/r_0JjYUe5jo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
      
@@ -76,11 +76,9 @@
                         <p>${comment['comment']} </p>
                     
                   <div class='pull-right'>
-                    <form method='POST' action="/comment/${comment['id']}" >
-                      @csrf
-                      @method('DELETE')
-                        <button type='submit' style='color:red'>X</button>
-                    </form>
+                  
+                        <button id='del-btn' type='submit' style='color:red' onclick='deleteComment(${comment['id']})'>X</button>
+                 
                   </div>
                   </div>
                   <hr/>
@@ -111,8 +109,26 @@
       });
      
     
+     function deleteComment (id) {
+         const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+         
+          $.ajax({
+    
+            type:'DELETE',
+    
+            url:'/comment/' + id,
+    
+            data:{ _token: CSRF_TOKEN},
+    
+          });
+          comments.innerHTML = '';
+          getComments();
+      };
+
+
     $( document ).ready(function() {
       getComments();
     });
+    
     </script>
 @endsection

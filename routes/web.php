@@ -13,19 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','MoviesController@index');
 
 Route::resource('movie', 'MoviesController');
 Route::resource('comment', 'CommentController');
-
-// Route::get('movie','MoviesController@index');
-// Route::get('movie/{movie}','MoviesController@show');
-// Route::get('movie/create','MoviesController@create');
-// Route::post('movies/store','MoviesController@store')->name('movie-store');
-// Route::delete('movies','MoviesController@destroy')->name('movie-destroy');
-
 
 Auth::routes();
 

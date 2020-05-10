@@ -47,13 +47,13 @@ class MoviesController extends Controller
         $this->validateRequest($request);
         // dd($request);
         $movie = new Movie();
-
+        
         $movie->title = $request->title;
         $movie->year = $request->year;
         $movie->genre_id = (int)$request->genre;
         $movie->description = $request->description;
-        $this->storeImage($movie);
-
+        $movie->cover_img = $this->storeImage();
+        // dd($movie);
         $movie->save();
         return  redirect('/movie',201);
     }
@@ -101,11 +101,13 @@ class MoviesController extends Controller
     public function update(Request $request, Movie $movie)
     {
 
+        
         $this->validateRequest($request);
-
+    
         $movie->title = $request->title;
         $movie->year = $request->year;
         $movie->genre_id = (int)$request->genre;
+        $movie->cover_img  =  $this->storeImage() ? $this->storeImage() : $movie->cover_img;
 
         $movie->update();
         return  redirect('/movie');
@@ -142,14 +144,15 @@ class MoviesController extends Controller
         return $request;
     }
 
-    public function storeImage($movie)
+    public function storeImage()
     {
+
       if(request()->has('cover_img')){
-        dd(request()->cover_img);  
-        $movie->update([
-            'cover_img' => request()->cover_img->store('uploads', 'public')
-        ]);
+        return request()->cover_img->store('uploads', 'public');
       }
+
+      return false;
+
     }
     
 }

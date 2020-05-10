@@ -6,7 +6,7 @@
 
             <div class="col-xs-12 col-sm-2 col-md-3 mt-2">
             <a href="/movie/{{$movie->id}}">
-                <img src="{{URL::asset('/img.jpg')}}" alt="cover Pic" height="300" width="200">
+                <img src="{{URL::asset('storage/' . $movie->cover_img)}}" alt="cover Pic" height="300" width="200">
             </a>
                 
                  <h2>{{$movie->title}}</h2>
@@ -45,30 +45,6 @@
                     
                 </div>
             </div>
-
-                {{-- <!-- The Edit Modal -->
-      <div class="modal" id="{{$movie->id}}">
-        <div class="modal-dialog">
-          <div class="modal-content">
-          
-            <!-- Modal Header -->
-            <div class="modal-header">
-            <h4 class="modal-title">Edit {{$movie->title}}</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <form method="POST" action="/movie/{{$movie->id}}" >
-                    @csrf
-                    @method('PUT')
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-            </div>
-            
-          </div> --}}
-        {{-- </div> --}}
         </div>
     @endforeach 
 </div>  
