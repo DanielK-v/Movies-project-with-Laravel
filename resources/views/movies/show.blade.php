@@ -5,16 +5,23 @@
   <div class="card">
     <div class="card-body">
       <h1 class="card-title">{{$movie->title}}</h1>
+      <hr>
       <div class="row">
         
         <img class="col-3" src="{{ URL::asset('storage/' . $movie->cover_img) }}" alt="cover Pic" height="300" width="200">
-        <iframe class="col-9" width="420" height="280" src="https://www.youtube.com/embed/r_0JjYUe5jo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe 
+          class="col-9" 
+          width="420" 
+          height="280" 
+          src="{{$movie->trailer_url}}" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+      </iframe>
       </div>
      
       <hr>
-    <p class="card-text">{{$movie->description}}</p>
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
+      <p class="card-text">{{$movie->description}}</p>
     </div>
   </div>
 
@@ -31,32 +38,23 @@
           </form>
       </div>
       @endauth
-
-      @forelse ($comments as $comment)
     
         <div id="comments" class="row-md-12" ></div>
-      
-      @empty
-      <div id="comments"class="col-md-12">
-        <div class="head mt-5">
-        <p class="">There are no comments for that movie yet.. :(</p>
-      </div>    
         
-    </div>
-      @endforelse
-     
+     </div>
+      
     </div>
   </div>
   
   <script>
     const comments = document.getElementById('comments');  
-    
+
       function getComments(){
         $.ajax({
     
               type:'GET',
     
-              url:'/comment',
+              url:'/comments',
     
               dataType: 'json',
     
@@ -65,21 +63,31 @@
               },
     
               success:function(data){
-    
+
+                if(data.length < 1) {
+                  comments.innerHTML += 
+                  ` <div id="comments"class="col-md-12">
+                      <div class="head mt-5">
+                      <p class="">There are no comments for that movie yet.. :(</p>
+                    </div> 
+                  <hr/>
+                  `
+
+                }
                 data.forEach(comment => {
                   comments.innerHTML +=
                     `<div class="head mt-5">
                         <small><strong class="user">${comment['user']['name']}</strong> ${comment['created_at']}</small>
                     </div>
                    
-                     <div>
+                    <div>
                         <p>${comment['comment']} </p>
                     
-                  <div class='pull-right'>
-                  
-                        <button id='del-btn' type='submit' style='color:red' onclick='deleteComment(${comment['id']})'>X</button>
-                 
-                  </div>
+                        <div class='pull-right'>
+                    
+                    <button id='del-btn' type='submit' style='color:red' onclick='deleteComment(${comment['id']})'>X</button>
+            
+                    </div>
                   </div>
                   <hr/>
                   `
@@ -116,7 +124,7 @@
     
             type:'DELETE',
     
-            url:'/comment/' + id,
+            url:'/comments/' + id,
     
             data:{ _token: CSRF_TOKEN},
     

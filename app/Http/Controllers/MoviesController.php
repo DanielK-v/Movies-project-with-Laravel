@@ -28,6 +28,7 @@ class MoviesController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Movie::class);
         $genres = Genre::All()->toArray();
 
         return view('/movies.create')->with('genres', $genres);
@@ -45,7 +46,7 @@ class MoviesController extends Controller
         $this->authorize('create', Movie::class);
         
         $this->validateRequest($request);
-        // dd($request);
+
         $movie = new Movie();
         
         $movie->title = $request->title;
@@ -53,9 +54,9 @@ class MoviesController extends Controller
         $movie->genre_id = (int)$request->genre;
         $movie->description = $request->description;
         $movie->cover_img = $this->storeImage();
-        // dd($movie);
         $movie->save();
-        return  redirect('/movie',201);
+        
+        return  redirect('/movies',201);
     }
 
     /**
@@ -85,7 +86,7 @@ class MoviesController extends Controller
      */
     public function edit(Movie $movie)
     {
-        // $this->authorize('edit', $movie);
+        $this->authorize('edit', $movie);
         $genres = Genre::All()->toArray();
     
         return view('/movies.edit')->with(['genres' => $genres, 'movie'=>$movie]);
@@ -110,7 +111,7 @@ class MoviesController extends Controller
         $movie->cover_img  =  $this->storeImage() ? $this->storeImage() : $movie->cover_img;
 
         $movie->update();
-        return  redirect('/movie');
+        return  redirect('/movies');
     }
 
     /**
@@ -123,7 +124,8 @@ class MoviesController extends Controller
     {
         $this->authorize('delete', $movie);
         $movie->delete();
-        return redirect('/movie');
+        // return response()
+        return redirect()->back();
     }
 
     public function validateRequest($request)

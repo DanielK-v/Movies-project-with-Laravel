@@ -17,16 +17,10 @@ class CommentController extends Controller
      */
     public function index()
     {
-        // $comments = Comment::with('user')->get();
-        // return $comments->toJson();
 
         $id = request('movie_id');
-
         $comments_for_movie = Comment::with('user')->where('movie_id', '=', $id)->orderBy('created_at', 'desc')->get();
         return $comments_for_movie->toJson();
-        // return response()->json(["data" => $comments_for_movie]);
-
-        // $comments = json_encode($comments);
 
        
     }
@@ -116,6 +110,7 @@ class CommentController extends Controller
     public function destroy(Comment $comment)
     {
     
+        $this->authorize('delete', $comment);
         $comment->delete();
     }
 

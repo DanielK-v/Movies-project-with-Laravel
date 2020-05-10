@@ -43,7 +43,7 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <li><a  class="nav-link" href="{{ url('/movie') }}">Movies</a></li>
+                        <li><a  class="nav-link" href="{{ url('/movies') }}">Movies</a></li>
                         
                         <!-- Authentication Links -->
                         @guest
@@ -73,6 +73,9 @@
                                     </form>
                                 </div>
                             </li>
+                            @can('create', App\Movie::class)
+                            <li><a  class="nav-link" href="{{ url('/movies/create') }}">Add movie</a></li>
+                            @endcan
                         @endguest
                     </ul>
                 </div>

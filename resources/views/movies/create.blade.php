@@ -7,7 +7,7 @@
                 <div class="card-header">{{ __('Create Movie') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/movie" enctype="multipart/form-data">
+                    <form method="POST" action="/movies" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group row">
@@ -49,6 +49,20 @@
                                 <div class="col-md-6">
                                 <input class="date-own form-control" type="text" name="year">
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="trailer_url" class="col-md-4 col-form-label text-md-right">{{ __('Movie trailer link') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="trailer_url" type="text" class="form-control @error('trailer_url') is-invalid @enderror" name="trailer_url" value="{{ old('trailer_url') }}" required autofocus>
+
+                                @error('trailer_url')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 

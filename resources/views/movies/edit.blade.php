@@ -7,10 +7,9 @@
                 <div class="card-header">Edit {{$movie->title}}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/movie/{{$movie->id}}" enctype="multipart/form-data">
+                    <form method="POST" action="/movies/{{$movie->id}}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        {{-- <input type="hidden" id="movie_id" name="movie_id" value={{$movie->id}}> --}}
                         <div class="form-group row">
                             <label for="title" class="col-md-4 col-form-label text-md-right">{{ __('title') }}</label>
 
@@ -70,7 +69,7 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Register movie') }}
+                                    {{ __('Edit movie') }}
                                 </button>
                             </div>
                         </div>
