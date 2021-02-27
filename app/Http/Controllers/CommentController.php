@@ -17,12 +17,12 @@ class CommentController extends Controller
      */
     public function index()
     {
-
         $id = request('movie_id');
-        $comments_for_movie = Comment::with('user')->where('movie_id', '=', $id)->orderBy('created_at', 'desc')->get();
-        return $comments_for_movie->toJson();
+        $comments_for_movie = Comment::with('user')
+            ->where('movie_id', '=', $id)
+            ->orderBy('created_at', 'desc')->get();
 
-       
+        return $comments_for_movie->toJson();
     }
 
     /**
@@ -43,9 +43,7 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-
-        if (Auth::check())
-        {
+        if (Auth::check()) {
             $this->validateComment($request);
             $new_comment = new Comment();
 
@@ -54,9 +52,9 @@ class CommentController extends Controller
             $new_comment->comment = $request->comment;
             $new_comment->user_id = $user_id;
             $new_comment->movie_id = $request->movie_id;
-            
+
             $new_comment->save();
-        }   
+        }
     }
 
     /**
@@ -74,8 +72,6 @@ class CommentController extends Controller
         return response()->json(["data" => $comments_for_movie]);
 
         $number_of_comments = count($comments_for_movie);
-
-       
     }
 
     /**
@@ -109,24 +105,19 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-    
+
         $this->authorize('delete', $comment);
         $comment->delete();
     }
 
     public function validateComment($request)
     {
-     
-        if(request()->has('comment'){
+
+        if (request()->has('comment'){
             request()->validate([
                 'comment' => 'required|max:5000'
-            ])
-        });
+            ])});
 
         return $request;
     }
-
-
-
-    
 }
