@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,11 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/','MoviesController@index');
-
+Auth::routes();
+Route::get('login/github', 'Auth\LoginController@redirectToProvider');
+Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('/', 'MoviesController@index');
 Route::resource('movies', 'MoviesController');
 Route::resource('comments', 'CommentController');
-
-Auth::routes();
-
-

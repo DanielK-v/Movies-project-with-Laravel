@@ -4,7 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Laravel\Socialite\Facades\Socialite;
+use Auth;
+use Hash;
+use Illuminate\Support\Facades\Hash as FacadesHash;
+use Str;
+
 
 class LoginController extends Controller
 {
@@ -36,5 +43,37 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function redirectToProvider()
+    {
+        return Socialite::driver('github')->redirect();
+    }
+
+    /**
+     * Obtain the user information from GitHub.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleProviderCallback()
+    {
+        $user = Socialite::driver('github')->user();
+
+        // dd($user);
+
+        $user = User::firstOrCreate([
+            'email' => $user->email
+        ], [
+            'username' => $user->nickname,
+            'name' => $user->name ? $user->name : $user->nickname,
+            'password' => Hash::make(Str::random(10))
+
+        ]);
+
+
+
+        Auth::login($user, true);
+
+        return redirect('/movies');
     }
 }
