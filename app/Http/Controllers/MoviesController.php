@@ -47,15 +47,14 @@ class MoviesController extends Controller
 
         $this->validateRequest($request);
 
-        $movie = new Movie();
-
-        $movie->title = $request->title;
-        $movie->year = $request->year;
-        $movie->genre_id = (int) $request->genre;
-        $movie->description = $request->description;
-        $movie->trailer_url = $request->trailer_url;
-        $movie->cover_img = $this->storeImage();
-        $movie->save();
+        $movie = Movie::create([
+            "title" => $request->title,
+            "year" => $request->year,
+            "genre_id" => 1,
+            "description" => $request->description,
+            "trailer_url" => $request->trailer_url,
+            "cover_img" => $this->storeImage(),
+        ]);
 
         return  redirect('/movies', 201);
     }
